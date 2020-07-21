@@ -35,11 +35,12 @@ __attribute__((weak)) bool get_combo_must_hold(uint16_t index, combo_t *combo) {
 __attribute__((weak)) uint16_t get_combo_term(uint16_t index, combo_t *combo) { return COMBO_TERM; }
 #endif
 
-static uint16_t timer               = 0;
-static uint16_t  prepared_combo_index  = -1;
-static bool     is_active           = true;
-static bool     b_combo_enable      = true;  // defaults to enabled
+static uint16_t timer                 = 0;
+static uint16_t  prepared_combo_index = -1;
+static bool     is_active             = true;
+static bool     b_combo_enable        = true;  // defaults to enabled
 static combo_t  *prepared_combo       = NULL;
+static uint16_t longest_term          = 0;
 #define COMBO_PREPARED (prepared_combo && !prepared_combo->disabled)
 
 static uint8_t buffer_size = 0;
@@ -71,6 +72,7 @@ void clear_combos(bool clear_state) {
     uint16_t index = 0;
     prepared_combo = NULL;
     prepared_combo_index = -1;
+    longest_term = 0;
 #ifndef COMBO_VARIABLE_LEN
     for (index = 0; index < COMBO_COUNT; ++index) {
 #else
@@ -110,8 +112,6 @@ void fire_combo(void) {
 #endif
     send_combo(prepared_combo->keycode, true, prepared_combo_index);
     prepared_combo->active = true;
-    prepared_combo = NULL;
-    prepared_combo_index = -1;
     dump_key_buffer(false);
 }
 
@@ -149,22 +149,25 @@ static bool process_single_combo(combo_t *combo, uint16_t keycode, keyrecord_t *
     bool is_combo_active = is_active & !combo->disabled;
 
     if (record->event.pressed) {
+        uint16_t time = COMBO_TERM;
+#if defined(COMBO_TERM_PER_COMBO)
+        time = get_combo_term(combo_index, combo);
+#elif defined(COMBO_MUST_HOLD_PER_COMBO)
+        if (get_combo_must_hold(combo_index, combo)) time = COMBO_MOD_TERM;
+#elif defined(COMBO_MUST_HOLD_MODS)
+        if (KEYCODE_IS_MOD(combo->keycode)) time = COMBO_MOD_TERM;
+#endif
         if (!combo->active) {
             KEY_STATE_DOWN(index);
+            if (longest_term < time) {
+                longest_term = time;
+            }
         }
         if (is_combo_active) {
             if (ALL_COMBO_KEYS_ARE_DOWN) { /* Combo was pressed */
                 /* Save the combo so we can fire it after COMBO_TERM */
 
                 /* Don't prepare this combo if its combo term has passed. */
-                uint16_t time = COMBO_TERM;
-#if defined(COMBO_TERM_PER_COMBO)
-                time = get_combo_term(combo_index, combo);
-#elif defined(COMBO_MUST_HOLD_PER_COMBO)
-                if (get_combo_must_hold(combo_index, combo)) time = COMBO_MOD_TERM;
-#elif defined(COMBO_MUST_HOLD_MODS)
-                if (KEYCODE_IS_MOD(combo->keycode)) time = COMBO_MOD_TERM;
-#endif
                 if (timer_elapsed(timer) < time) {
                     prepared_combo = combo;
                     prepared_combo_index = combo_index;
@@ -296,12 +299,14 @@ void matrix_scan_combo(void) {
     }
 #endif
 
+    if (longest_term > time) {
+        time = longest_term;
+    }
+
     if (is_active && timer && timer_elapsed(timer) > time) {
         if (COMBO_PREPARED) {
             fire_combo();
         } else {
-            prepared_combo = NULL;
-            prepared_combo_index = -1;
             dump_key_buffer(true);
             timer = 0;
             is_active = true;
