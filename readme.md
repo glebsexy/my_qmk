@@ -1,5 +1,14 @@
 # Quantum Mechanical Keyboard Firmware
 
+# gBoards monorepo
+
+This repo contains the current working implementations for all the keyboards from gboards.ca and is maintained
+seperate from qmk/master. If your board is already in qmk/master, use that repo instead.
+
+All keyboards are under keyboards/gboards/k and can be built and flashed with the following command
+
+`make gboards/k/keyboardname:default:dfu`
+
 [![Current Version](https://img.shields.io/github/tag/qmk/qmk_firmware.svg)](https://github.com/qmk/qmk_firmware/tags)
 [![Build Status](https://travis-ci.org/qmk/qmk_firmware.svg?branch=master)](https://travis-ci.org/qmk/qmk_firmware)
 [![Discord](https://img.shields.io/discord/440868230475677696.svg)](https://discord.gg/Uq7gcHh)
