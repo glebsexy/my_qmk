@@ -1009,6 +1009,15 @@ bool is_tap_key(keypos_t key) {
  *
  * FIXME: Needs documentation.
  */
+bool is_tap_record(keyrecord_t *record) {
+    action_t action = layer_switch_get_action(record->event.key);
+    return is_tap_action(action);
+}
+
+/** \brief Utilities for actions. (FIXME: Needs better description)
+ *
+ * FIXME: Needs documentation.
+ */
 bool is_tap_action(action_t action) {
     switch (action.kind.id) {
         case ACT_LMODS_TAP:

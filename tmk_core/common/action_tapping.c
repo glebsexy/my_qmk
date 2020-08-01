@@ -18,11 +18,12 @@
 #    define IS_TAPPING_PRESSED() (IS_TAPPING() && tapping_key.event.pressed)
 #    define IS_TAPPING_RELEASED() (IS_TAPPING() && !tapping_key.event.pressed)
 #    define IS_TAPPING_KEY(k) (IS_TAPPING() && KEYEQ(tapping_key.event.key, (k)))
+#    define IS_TAPPING_RECORD(r) (IS_TAPPING() && KEYEQ(tapping_key.event.key, (r->event.key)))
 
 __attribute__((weak)) uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) { return TAPPING_TERM; }
 
 #    ifdef TAPPING_TERM_PER_KEY
-#        define WITHIN_TAPPING_TERM(e) (TIMER_DIFF_16(e.time, tapping_key.event.time) < get_tapping_term(get_event_keycode(tapping_key.event, false), &tapping_key))
+#        define WITHIN_TAPPING_TERM(e) (TIMER_DIFF_16(e.time, tapping_key.event.time) < get_tapping_term(get_record_keycode(&tapping_key, false), &tapping_key))
 #    else
 #        define WITHIN_TAPPING_TERM(e) (TIMER_DIFF_16(e.time, tapping_key.event.time) < TAPPING_TERM)
 #    endif
@@ -103,7 +104,7 @@ bool process_tapping(keyrecord_t *keyp) {
     if (IS_TAPPING_PRESSED()) {
         if (WITHIN_TAPPING_TERM(event)) {
             if (tapping_key.tap.count == 0) {
-                if (IS_TAPPING_KEY(event.key) && !event.pressed) {
+                if (IS_TAPPING_RECORD(keyp) && !event.pressed) {
                     // first tap!
                     debug("Tapping: First tap(0->1).\n");
                     tapping_key.tap.count = 1;
@@ -122,10 +123,10 @@ bool process_tapping(keyrecord_t *keyp) {
 #    if defined(TAPPING_TERM_PER_KEY) || (TAPPING_TERM >= 500) || defined(PERMISSIVE_HOLD) || defined(PERMISSIVE_HOLD_PER_KEY)
                 else if (
 #        ifdef TAPPING_TERM_PER_KEY
-                    (get_tapping_term(get_event_keycode(tapping_key.event, false), keyp) >= 500) &&
+                    (get_tapping_term(get_record_keycode(&tapping_key, false), keyp) >= 500) &&
 #        endif
 #        ifdef PERMISSIVE_HOLD_PER_KEY
-                    !get_permissive_hold(get_event_keycode(tapping_key.event, false), keyp) &&
+                    !get_permissive_hold(get_record_keycode(&tapping_key, false), keyp) &&
 #        endif
                     IS_RELEASED(event) && waiting_buffer_typed(event)) {
                     debug("Tapping: End. No tap. Interfered by typing key\n");
@@ -170,7 +171,7 @@ bool process_tapping(keyrecord_t *keyp) {
             }
             // tap_count > 0
             else {
-                if (IS_TAPPING_KEY(event.key) && !event.pressed) {
+                if (IS_TAPPING_RECORD(keyp) && !event.pressed) {
                     debug("Tapping: Tap release(");
                     debug_dec(tapping_key.tap.count);
                     debug(")\n");
@@ -179,7 +180,7 @@ bool process_tapping(keyrecord_t *keyp) {
                     tapping_key = *keyp;
                     debug_tapping_key();
                     return true;
-                } else if (is_tap_key(event.key) && event.pressed) {
+                } else if (is_tap_record(keyp) && event.pressed) {
                     if (tapping_key.tap.count > 1) {
                         debug("Tapping: Start new tap with releasing last tap(>1).\n");
                         // unregister key
@@ -211,13 +212,13 @@ bool process_tapping(keyrecord_t *keyp) {
                 debug_tapping_key();
                 return false;
             } else {
-                if (IS_TAPPING_KEY(event.key) && !event.pressed) {
+                if (IS_TAPPING_RECORD(keyp) && !event.pressed) {
                     debug("Tapping: End. last timeout tap release(>0).");
                     keyp->tap = tapping_key.tap;
                     process_record(keyp);
                     tapping_key = (keyrecord_t){};
                     return true;
-                } else if (is_tap_key(event.key) && event.pressed) {
+                } else if (is_tap_record(keyp) && event.pressed) {
                     if (tapping_key.tap.count > 1) {
                         debug("Tapping: Start new tap with releasing last timeout tap(>1).\n");
                         // unregister key
@@ -241,12 +242,12 @@ bool process_tapping(keyrecord_t *keyp) {
     } else if (IS_TAPPING_RELEASED()) {
         if (WITHIN_TAPPING_TERM(event)) {
             if (event.pressed) {
-                if (IS_TAPPING_KEY(event.key)) {
+                if (IS_TAPPING_RECORD(keyp)) {
 //#    ifndef TAPPING_FORCE_HOLD
 #    if !defined(TAPPING_FORCE_HOLD) || defined(TAPPING_FORCE_HOLD_PER_KEY)
                     if (
 #        ifdef TAPPING_FORCE_HOLD_PER_KEY
-                        !get_tapping_force_hold(get_event_keycode(tapping_key.event, false), keyp) &&
+                        !get_tapping_force_hold(get_record_keycode(&tapping_key, false), keyp) &&
 #        endif
                         !tapping_key.tap.interrupted && tapping_key.tap.count > 0) {
                         // sequential tap.
@@ -264,7 +265,7 @@ bool process_tapping(keyrecord_t *keyp) {
                     // FIX: start new tap again
                     tapping_key = *keyp;
                     return true;
-                } else if (is_tap_key(event.key)) {
+                } else if (is_tap_record(keyp)) {
                     // Sequential tap can be interfered with other tap key.
                     debug("Tapping: Start with interfering other tap.\n");
                     tapping_key = *keyp;
@@ -296,7 +297,7 @@ bool process_tapping(keyrecord_t *keyp) {
     }
     // not tapping state
     else {
-        if (event.pressed && is_tap_key(event.key)) {
+        if (event.pressed && is_tap_record(keyp)) {
             debug("Tapping: Start(Press tap key).\n");
             tapping_key = *keyp;
             process_record_tap_hint(&tapping_key);
