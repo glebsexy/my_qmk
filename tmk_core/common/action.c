@@ -212,7 +212,16 @@ void process_record(keyrecord_t *record) {
 }
 
 void process_record_handler(keyrecord_t *record) {
+#ifdef COMBO_ENABLE
+    action_t action;
+    if (record->keycode) {
+        action = action_for_keycode(record->keycode);
+    } else {
+        action = store_or_get_action(record->event.pressed, record->event.key);
+    }
+#else
     action_t action = store_or_get_action(record->event.pressed, record->event.key);
+#endif
     dprint("ACTION: ");
     debug_action(action);
 #ifndef NO_ACTION_LAYER
@@ -1010,7 +1019,16 @@ bool is_tap_key(keypos_t key) {
  * FIXME: Needs documentation.
  */
 bool is_tap_record(keyrecord_t *record) {
+#ifdef COMBO_ENABLE
+    action_t action;
+    if (record->keycode) {
+        action = action_for_keycode(record->keycode);
+    } else {
+        action = layer_switch_get_action(record->event.key);
+    }
+#else
     action_t action = layer_switch_get_action(record->event.key);
+#endif
     return is_tap_action(action);
 }
 

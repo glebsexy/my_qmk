@@ -53,6 +53,9 @@ typedef struct {
 #ifndef NO_ACTION_TAPPING
     tap_t tap;
 #endif
+#ifdef COMBO_ENABLE
+    uint16_t keycode;
+#endif
 } keyrecord_t;
 
 /* Execute action per keyevent */

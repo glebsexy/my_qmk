@@ -48,21 +48,19 @@ static keyrecord_t key_buffer[MAX_COMBO_LENGTH];
 
 static inline void send_combo(uint16_t keycode, bool pressed, uint16_t combo_index) {
     if (keycode) {
-        if (pressed) {
-            if (KEYCODE_IS_MOD(keycode)) {
-                register_mods(keycode >> 8);
-                register_code((uint8_t)keycode);
-            } else {
-                register_code16(keycode);
-            }
-        } else {
-            if (KEYCODE_IS_MOD(keycode)) {
-                unregister_mods(keycode >> 8);
-                unregister_code((uint8_t)keycode);
-            } else {
-                unregister_code16(keycode);
-            }
-        }
+        keyrecord_t record = {
+            .event = {
+                .key = {.col = 254, .row = 254},
+                .time = timer_read()|1,
+                .pressed = pressed,
+            },
+            .keycode = keycode,
+        };
+#ifndef NO_ACTION_TAPPING
+        action_tapping_process(record);
+#else
+        process_record(record);
+#endif
     } else {
         process_combo_event(combo_index, pressed);
     }
@@ -107,9 +105,6 @@ static inline void dump_key_buffer(bool emit) {
 }
 
 void fire_combo(void) {
-#ifndef NO_ACTION_TAPPING
-    action_tapping_process((keyrecord_t){}); // trigger possible ModTaps
-#endif
     send_combo(prepared_combo->keycode, true, prepared_combo_index);
     prepared_combo->active = true;
     dump_key_buffer(false);
