@@ -17,7 +17,7 @@
 #include <ctype.h>
 #include "quantum.h"
 
-#ifdef PROTOCOL_LUFA
+#ifdef BLUETOOTH_ENABLE
 #    include "outputselect.h"
 #endif
 
@@ -145,7 +145,13 @@ void reset_keyboard(void) {
 }
 
 /* Convert record into usable keycode via the contained event. */
-uint16_t get_record_keycode(keyrecord_t *record, bool update_layer_cache) { return get_event_keycode(record->event, update_layer_cache); }
+uint16_t get_record_keycode(keyrecord_t *record, bool update_layer_cache) {
+#ifdef COMBO_ENABLE
+    if (record->keycode) { return record->keycode; }
+#endif
+    return get_event_keycode(record->event, update_layer_cache);
+}
+
 
 /* Convert event into usable keycode. Checks the layer cache to ensure that it
  * retains the correct keycode after a layer change, if the key is still pressed.
@@ -169,6 +175,18 @@ uint16_t get_event_keycode(keyevent_t event, bool update_layer_cache) {
     } else
 #endif
         return keymap_key_to_keycode(layer_switch_get_layer(event.key), event.key);
+}
+
+/* Get keycode, and then process pre tapping functionality */
+bool pre_process_record_quantum(keyrecord_t *record) {
+    if (!(
+#ifdef COMBO_ENABLE
+        process_combo(get_record_keycode(record, true), record) &&
+#endif
+        true)) {
+        return false;
+    }
+    return true; // continue processing
 }
 
 /* Get keycode, and then call keyboard function */
@@ -253,9 +271,6 @@ bool process_record_quantum(keyrecord_t *record) {
 #ifdef LEADER_ENABLE
             process_leader(keycode, record) &&
 #endif
-#ifdef COMBO_ENABLE
-            process_combo(keycode, record) &&
-#endif
 #ifdef PRINTING_ENABLE
             process_printer(keycode, record) &&
 #endif
@@ -276,6 +291,9 @@ bool process_record_quantum(keyrecord_t *record) {
 #endif
 #if defined(RGBLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
             process_rgb(keycode, record) &&
+#endif
+#ifdef JOYSTICK_ENABLE
+            process_joystick(keycode, record) &&
 #endif
             true)) {
         return false;
@@ -618,7 +636,7 @@ void matrix_init_quantum() {
 #ifdef HAPTIC_ENABLE
     haptic_init();
 #endif
-#ifdef OUTPUT_AUTO_ENABLE
+#if defined(BLUETOOTH_ENABLE) && defined(OUTPUT_AUTO_ENABLE)
     set_output(OUTPUT_AUTO);
 #endif
 
