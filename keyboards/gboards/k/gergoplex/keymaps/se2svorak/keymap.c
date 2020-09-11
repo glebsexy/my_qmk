@@ -26,57 +26,57 @@
 #include "keymap_swedish.h"
 
 enum se2svorak_layers {
-    BASEPC,     // Base layer for linux/windows
-    BASEMAC,    // Base layer for macos
-    SYM,        // Symbols layer
-    SYMMAC,     // Symbols adjustment for macos
-    NUM,        // Numbers & Navigation layer
-    NUMMAC,     // Numbers & Navigation adjustment for macos
-    MOUSE,      // Mouse
-    MOUSEMAC,   // Mouse adjustment macos
-    FN,         // Function keys
-    MEDIA,      // Media keys
-    MEDIAMAC,   // Media keys adjustment macos
+    BASEPC,
+    BASEMAC,
+    SYM,
+    SYMMAC,
+    NUM,
+    NUMMAC,
+    MOUSE,
+    MOUSEMAC,
+    FN,
+    MEDIA,
+    MEDIAMAC,
 };
 
 
-// Macos keys
-#define MACPIPE A(SE_7)         // Pipe
-#define MACBSLS S(MACPIPE)      // Backslash
-#define MACLCBR S(SE_LBRC)      // Left curly bracket
-#define MACRCBR S(SE_RBRC)      // Right curly bracket
-#define MACLOCK C(G(KC_Q))      // Screen lock
+// OS-specific keys
+#define MACPIPE A(SE_7)
+#define MACBSLS S(MACPIPE)
+#define MACLCBR S(SE_LBRC)
+#define MACRCBR S(SE_RBRC)
+#define MACLOCK C(G(KC_Q))
+#define WINLOCK G(KC_L)
 
-// Windows keys
-#define WINLOCK G(KC_L)         // Screen lock
+// Finetune volume
+#define FINVOLD S(A(KC_VOLD))
+#define FINVOLU S(A(KC_VOLU))
 
-// Media keys
-#define FINVOLD S(A(KC_VOLD))   // Finetune volume down
-#define FINVOLU S(A(KC_VOLU))   // Finetune volume up
 
-// Keys that require a bit more work
 enum se2svorak_keycodes {
-    ADJ_PC,                 // Reconfigure to win/linux keyboard mode
-    ADJ_MAC,                // Reconfigure to macos keyboard mode
+    // Live versions of some dead keys
+    LV_CIRC = SAFE_RANGE,
+    LV_GRV,
+    LV_TILD,
 
-    LV_CIRC = SAFE_RANGE,   // Live cirumflex/macron
-    LV_GRV,                 // Live grave accent
-    LV_TILD,                // Live tilde
+    // Reconfigure for pc/mac
+    ADJ_PC,
+    ADJ_MAC,
 
-    LAY_SYM,                // Switch to Symbols layer when held
-    MAC_SYM,                // Symbols layer with mac adjustment
-    LAY_NUM,                // Switch to Numbers & Navigation layer when held
-    MAC_NUM,                // Numbers & Navigation layer with mac adjustment
-    LAY_MOU,                // Switch to mouse layer when held
-    MAC_MOU,                // Mouse layer with mac adjustment
-    LAY_MED,                // Switch to media keys layer when held
-    MAC_MED,                // Media keys layer with mac adjustment
+    // Switch to layer when held + mac adjusted versions
+    LAY_SYM,
+    MAC_SYM,
+    LAY_NUM,
+    MAC_NUM,
+    LAY_MOU,
+    MAC_MOU,
+    LAY_MED,
+    MAC_MED,
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
 
-    // This pc/mac reconfiguration persists over power cycles.
     case ADJ_PC:
         if (record->event.pressed) {
             set_single_persistent_default_layer(BASEPC);
@@ -90,7 +90,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
         break;
 
-    // Send the dead key followed by a space to make it live.
     case LV_CIRC:
         if (record->event.pressed) {
             SEND_STRING(SS_DOWN(X_LSFT) SS_TAP(X_RBRC) SS_UP(X_LSFT) " ");
@@ -107,7 +106,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         break;
 
-    // Toggle the specified layers on both key press and release, imitating
+    // Toggle the specified layers on both key press and release, emulating
     // the "momentarily switch to layer when held" behaviour of MO().
     case LAY_SYM:
         layer_invert(SYM);
