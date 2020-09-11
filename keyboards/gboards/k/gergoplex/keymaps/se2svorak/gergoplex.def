@@ -1,8 +1,11 @@
 // Gergoplex specfic combos 
 
-COMB(rafmEscape,  KC_ESC,           KC_COMM, KC_DOT)
-COMB(rafmTab,     KC_TAB,           KC_O, KC_E)
-COMB(rafmBspc,    KC_BSPC,          KC_C, KC_R)
-COMB(rafmEnter,   KC_ENT,           KC_W, KC_V)
+COMB(s2sEscape,         KC_ESC,         KC_DOT, KC_COMM)
+COMB(s2sControlA,       C(KC_A),        KC_A,   KC_LCTL)
+COMB(s2sTab,            KC_TAB,         KC_O,   KC_E)
+COMB(s2sShift,          KC_LSFT,        KC_Q,   KC_J)
+COMB(s2sUnderscore,     S(KC_SLSH),     KC_J,   KC_K)
 
-// SUBS(pasta,       "I'd just like to interject for a moment.",       KC_H, KC_J, KC_K, KC_L)
+COMB(s2sBackspace,      KC_BSPC,        KC_C,   KC_R)
+COMB(s2sEnter,          KC_ENT,         KC_W,   KC_V)
+COMB(s2sControl,        KC_RCTL,        KC_V,   KC_Z)
