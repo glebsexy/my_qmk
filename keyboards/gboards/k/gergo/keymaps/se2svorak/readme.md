@@ -1,4 +1,4 @@
-# Gergo se2svorak layout by cttsrk@gmail.com, rev.63
+# Gergo se2svorak layout, rev.63
 
 This is a modified Swedish dvorak ("svorak") layout intended for connecting
 to PC systems configured with a regular Swedish or Finnish layout, or MacOS
