@@ -14,3 +14,4 @@ modifier-hopping when typing e.g `print!("{:#x?}\n", foo);`.
 NOTICE that the layout does not use 10 of the keys (5 per hand) available on
 the Gergo, as they are less ergonomic and not needed for this layout paradigm.
 
+![](se2svorak.png?raw=true)
