@@ -54,6 +54,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     get_mods() == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)) \
 )
 
-#define DEBOUNCE    5
+#define DEBOUNCE    10
 #define USB_MAX_POWER_CONSUMPTION 500
 #define COMBO_TERM 40

@@ -1,0 +1,28 @@
+// Gergoplex specfic combos 
+
+// action keys
+COMB(qweEsc,      KC_ESC,         KC_Q, KC_W, KC_E)
+COMB(ertF19,      KC_F19,         KC_R, KC_T, KC_E)
+COMB(sdBspc,      KC_BSPC,        KC_S, KC_D)
+COMB(sdfAltBspc,  LALT(KC_BSPC),  KC_S, KC_D, KC_F)
+COMB(dfTab,       KC_TAB,         KC_D, KC_F)
+COMB(hnEnter,     KC_ENT,         KC_H, KC_N)
+COMB(hySftEnter,  LSFT(KC_ENT),   KC_H, KC_Y)
+COMB(kjSpace,     KC_SPC,         KC_K, KC_J)
+
+// symbols
+COMB(hjDash,      KC_MINS,        KC_H, KC_J)
+COMB(yuEquals,    KC_EQL,         KC_Y, KC_U)
+COMB(nmQuot,      KC_QUOT,        KC_N, KC_M)
+COMB(cdDot,       RALT(RCTL(KC_DOT)),    KC_COMM, KC_DOT)
+COMB(mcComma,     RALT(RCTL(KC_COMM)),   KC_M, KC_COMM)
+
+COMB(opBacksl,    KC_BSLS,        KC_O, KC_P)
+COMB(uiLbrc,      KC_LBRC,        KC_U, KC_I)
+COMB(ioRbrc,      KC_RBRC,        KC_I, KC_O)
+
+//COMB(hjLess,      KC_LT,            KC_H, KC_J)
+//COMB(klGreat,     KC_GT,            KC_K, KC_L)
+//COMB(mcUnds,      KC_UNDS,          KC_M, KC_COMM)
+
+//SUBS(pasta,       "Hello",       KC_H, KC_J, KC_K, KC_L)
