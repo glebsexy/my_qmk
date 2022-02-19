@@ -3,6 +3,7 @@
 // action keys
 COMB(qweEsc,      KC_ESC,         KC_Q, KC_W, KC_E)
 COMB(ertF19,      KC_F19,         KC_R, KC_T, KC_E)
+COMB(ypScreenshot,KC_F2,          KC_Y, KC_P)
 COMB(sdBspc,      KC_BSPC,        KC_S, KC_D)
 COMB(sdfAltBspc,  LALT(KC_BSPC),  KC_S, KC_D, KC_F)
 COMB(dfTab,       KC_TAB,         KC_D, KC_F)

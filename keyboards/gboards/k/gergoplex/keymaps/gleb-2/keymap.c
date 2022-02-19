@@ -17,7 +17,8 @@
 //Tap Dance Declarations
 enum {
  TD_CMD_OPT,
- TD_LAY1_LAY2
+ TD_LAY1_LAY2,
+ TD_CMD_SYMB
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -30,15 +31,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     MT(MOD_RSFT, KC_Z), MT(MOD_LCTL, KC_X), KC_C, KC_V, KC_B,       KC_N, KC_M, KC_COMM, KC_DOT, MT(MOD_RSFT, KC_SLSH),
 
     KC_LALT, TD(TD_CMD_OPT), LT(SYMB, KC_SPC),  // Left
-    TD(TD_LAY1_LAY2), KC_LGUI, KC_RSFT // Right
+    MO(NAVIG), KC_RGUI, KC_RCTL // Right
 ),
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
 [SYMB] = LAYOUT_gergoplex(
     RALT(KC_LBRC),       RALT(RSFT(KC_LBRC)), KC_LCBR, KC_RCBR, KC_GRV,                KC_DEL,  KC_7, KC_8, KC_9, KC_0,
-    RALT(KC_BSLS),       RALT(RSFT(KC_BSLS)), KC_LPRN, KC_RPRN, LALT(KC_SCLN),         KC_RCTL, KC_4, KC_5, KC_6, KC_RALT,
-    RALT(RCTL(KC_COMM)), RALT(RCTL(KC_DOT)),  KC_LBRC, KC_RBRC, LSFT(LALT(KC_MINS)),   KC_RGUI, KC_1, KC_2, KC_3, KC_RSFT,
+    KC_LGUI,       RALT(RSFT(KC_BSLS)), KC_LPRN, KC_RPRN, LALT(KC_SCLN),         KC_RCTL, KC_4, KC_5, KC_6, KC_RALT,
+    KC_LSFT, RALT(RCTL(KC_DOT)),  KC_LBRC, KC_RBRC, LSFT(LALT(KC_MINS)),   KC_RGUI, KC_1, KC_2, KC_3, KC_RSFT,
     
     _______, _______, _______, // left
     _______, _______, _______ // right
@@ -47,9 +48,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //////////////////////////////////////////////////////////////////////////////////////
 
 [NAVIG] = LAYOUT_gergoplex(
-    _______, _______, _______, _______, _______,           _______, _______, KC_UP, _______, _______,
-    _______, _______, _______, _______, _______,           _______, KC_LEFT, KC_DOWN, KC_RIGHT, KC_RALT,
-    _______, _______, _______, _______, _______,           _______, _______, _______, _______, KC_RSFT,
+    _______, KC_MPRV, KC_MPLY, KC_MNXT, KC_WH_U,           _______, _______, KC_UP, _______, _______,
+    KC_LGUI, KC_VOLD, KC_VOLU, KC_MUTE, KC_WH_D,           _______, KC_LEFT, KC_DOWN, KC_RIGHT, KC_RALT,
+    KC_LSFT, _______, _______, _______, _______,           _______, _______, _______, _______, KC_RSFT,
 
     _______, _______, _______, // left
     _______, _______, _______ // right
@@ -78,11 +79,22 @@ void dance_lay_finished(qk_tap_dance_state_t *state, void *user_data) {
 
 void dance_lay_reset(qk_tap_dance_state_t *state, void *user_data) {
     layer_move(BASE);
-    // if (state->count == 1) {
-    //     unregister_code16(KC_COLN);
-    // } else {
-    //     unregister_code(KC_SCLN);
-    // }
+};
+
+void td_cmd_symb_finished(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_mods(MOD_BIT(KC_RGUI));
+    } else {
+        layer_move(SYMB);
+    }
+};
+
+void td_cmd_symb_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_mods(MOD_BIT(KC_RGUI));
+    } else {
+        layer_move(BASE);
+    }
 };
 
 ////////////////////////////////////////////////
@@ -90,5 +102,6 @@ void dance_lay_reset(qk_tap_dance_state_t *state, void *user_data) {
 //Tap Dance Definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_CMD_OPT]  = ACTION_TAP_DANCE_DOUBLE(KC_LGUI, KC_LALT),
-    [TD_LAY1_LAY2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lay_finished, dance_lay_reset)
+    [TD_LAY1_LAY2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lay_finished, dance_lay_reset),
+    [TD_CMD_SYMB] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_cmd_symb_finished, td_cmd_symb_reset)
 };
