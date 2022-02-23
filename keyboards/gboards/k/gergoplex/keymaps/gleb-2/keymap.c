@@ -37,8 +37,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /////////////////////////////////////////////////////////////////////////////////////////
 
 [SYMB] = LAYOUT_gergoplex(
-    RALT(KC_LBRC),       RALT(RSFT(KC_LBRC)), KC_LCBR, KC_RCBR, KC_GRV,                KC_DEL,  KC_7, KC_8, KC_9, KC_0,
-    KC_LGUI,       RALT(RSFT(KC_BSLS)), KC_LPRN, KC_RPRN, LALT(KC_SCLN),         KC_RCTL, KC_4, KC_5, KC_6, KC_RALT,
+    KC_LALT, LALT(KC_LBRC), KC_LCBR, KC_RCBR, KC_GRV,                KC_DEL,  KC_7, KC_8, KC_9, KC_0,
+    KC_LGUI, LALT(KC_BSLS), KC_LPRN, KC_RPRN, LALT(KC_SCLN),         KC_RCTL, KC_4, KC_5, KC_6, KC_RALT,
     KC_LSFT, RALT(RCTL(KC_DOT)),  KC_LBRC, KC_RBRC, LSFT(LALT(KC_MINS)),   KC_RGUI, KC_1, KC_2, KC_3, KC_RSFT,
     
     _______, _______, _______, // left
@@ -50,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [NAVIG] = LAYOUT_gergoplex(
     _______, KC_MPRV, KC_MPLY, KC_MNXT, KC_WH_U,           _______, _______, KC_UP, _______, _______,
     KC_LGUI, KC_VOLD, KC_VOLU, KC_MUTE, KC_WH_D,           _______, KC_LEFT, KC_DOWN, KC_RIGHT, KC_RALT,
-    KC_LSFT, _______, _______, _______, _______,           _______, _______, _______, _______, KC_RSFT,
+    KC_LSFT, KC_F1, KC_F2, KC_F3, KC_F4,                   _______, _______, _______, _______, KC_RSFT,
 
     _______, _______, _______, // left
     _______, _______, _______ // right
