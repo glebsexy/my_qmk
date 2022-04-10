@@ -1,12 +1,13 @@
 // Gergoplex specfic combos 
 
 // action keys
-COMB(qweEsc,      KC_ESC,         KC_Q, KC_W, KC_E)
+// COMB(qweEsc,      KC_ESC,         KC_Q, KC_W, KC_E)
 COMB(ertF19,      KC_F19,         KC_R, KC_T, KC_E)
 COMB(ypScreenshot,KC_F2,          KC_Y, KC_P)
 COMB(sdBspc,      KC_BSPC,        KC_S, KC_D)
 COMB(sdfAltBspc,  LALT(KC_BSPC),  KC_S, KC_D, KC_F)
-COMB(dfTab,       KC_TAB,         KC_D, KC_F)
+COMB(gbTab,       KC_TAB,         KC_G, KC_B)
+COMB(gtEsc,       KC_ESC,         KC_G, KC_T)
 COMB(hnEnter,     KC_ENT,         KC_H, KC_N)
 COMB(hySftEnter,  LSFT(KC_ENT),   KC_H, KC_Y)
 COMB(kjSpace,     KC_SPC,         KC_K, KC_J)
@@ -16,11 +17,22 @@ COMB(hjDash,      KC_MINS,        KC_H, KC_J)
 COMB(yuEquals,    KC_EQL,         KC_Y, KC_U)
 COMB(nmQuot,      KC_QUOT,        KC_N, KC_M)
 COMB(cdDot,       RALT(RCTL(KC_DOT)),    KC_COMM, KC_DOT)
-COMB(mcComma,     RALT(RCTL(KC_COMM)),   KC_M, KC_COMM)
+COMB(dmComm,      RALT(RCTL(KC_COMM)),   KC_COMM, KC_M)
 
+COMB(arrL,        RALT(RSFT(KC_RBRC)),   KC_LCBR, KC_LPRN) // →
+COMB(arrR,        RALT(KC_RBRC),         KC_RCBR, KC_RPRN) // ←
+COMB(arrU,        RALT(KC_QUOT),         KC_LCBR, KC_RCBR) // ↑
+COMB(arrD,        RALT(RSFT(KC_QUOT)),   KC_LPRN, KC_RPRN) // ↓
+
+// Russian letters
 COMB(opBacksl,    KC_BSLS,        KC_O, KC_P)
 COMB(uiLbrc,      KC_LBRC,        KC_U, KC_I)
 COMB(ioRbrc,      KC_RBRC,        KC_I, KC_O)
+
+// commands
+COMB(dcUndo,      RGUI(KC_Z),     KC_D, KC_C)
+COMB(rfRight,     KC_RIGHT,       KC_R, KC_F)
+COMB(edLeft,      KC_LEFT,        KC_E, KC_D)
 
 //COMB(hjLess,      KC_LT,            KC_H, KC_J)
 //COMB(klGreat,     KC_GT,            KC_K, KC_L)
