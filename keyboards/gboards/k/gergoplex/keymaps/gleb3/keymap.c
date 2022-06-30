@@ -48,8 +48,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //////////////////////////////////////////////////////////////////////////////////////
 
 [NAVIG] = LAYOUT_gergoplex(
-    KC_LALT, KC_MPRV, KC_MPLY, KC_MNXT, KC_WH_U,      KC_PGUP,   XXXXXXX, KC_UP,   XXXXXXX,  XXXXXXX,
-    KC_LGUI, KC_VOLD, KC_VOLU, KC_MUTE, KC_WH_D,      KC_PGDOWN, KC_LEFT, KC_DOWN, KC_RIGHT, KC_RALT,
+    KC_LALT, KC_MPRV, KC_MPLY, KC_MNXT, KC_WH_D,      KC_PGUP,   XXXXXXX, KC_UP,   XXXXXXX,  XXXXXXX,
+    KC_LGUI, KC_VOLD, KC_VOLU, KC_MUTE, KC_WH_U,      KC_PGDOWN, KC_LEFT, KC_DOWN, KC_RIGHT, KC_RALT,
     KC_LSFT, KC_F1, KC_F2, KC_F3, KC_F4,              KC_RGUI,   XXXXXXX, XXXXXXX, KC_RCTL,  KC_RSFT,
 
     _______, _______, _______, // left
