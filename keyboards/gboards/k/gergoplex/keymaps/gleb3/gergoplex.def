@@ -31,7 +31,7 @@ COMB(uiLbrc,      KC_LBRC,               KC_U, KC_I) // х
 COMB(ioRbrc,      KC_RBRC,               KC_I, KC_O) // ъ
 
 // commands
-// COMB(dcUndo,      RGUI(KC_Z),            KC_D, KC_C) // undo
+COMB(bvUndo,      RGUI(KC_Z),            KC_B, KC_V) // undo
 COMB(ertF19,      KC_F19,                KC_R, KC_T, KC_E) // fullscreen
 COMB(yiF2,        KC_F2,                 KC_Y, KC_I) // screenshot
 
