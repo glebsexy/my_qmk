@@ -5,13 +5,14 @@ COMB(sdBspc,      KC_BSPC,               KC_S, KC_D)
 COMB(sdfAltBspc,  LALT(KC_BSPC),         KC_S, KC_D, KC_F)
 COMB(gbTab,       KC_TAB,                KC_G, KC_B)
 COMB(gtEsc,       KC_ESC,                KC_G, KC_T)
-COMB(hnEnter,     KC_ENT,                KC_H, KC_N)
-COMB(hySftEnter,  LSFT(KC_ENT),          KC_H, KC_Y)
-COMB(kjSpace,     KC_SPC,                KC_K, KC_J)
+COMB(hnEnter,     KC_ENT,                KC_H, KC_N) // enter
+COMB(hySftEnter,  LSFT(KC_ENT),          KC_H, KC_Y) // shift enter
+COMB(kjSpace,     KC_SPC,                KC_K, KC_J) // space
 COMB(rfRight,     KC_RIGHT,              KC_R, KC_F) // arrow right
 COMB(edLeft,      KC_LEFT,               KC_E, KC_D) // arrow left
 COMB(ujAltRight,  RALT(KC_RIGHT),        KC_U, KC_J) // alt right (move, select, tabs, etc.)
 COMB(kiAltLeft,   RALT(KC_LEFT),         KC_K, KC_I) // alt left
+COMB(werPlay,     KC_MPLY,               KC_W, KC_E, KC_R) // media play
 
 // symbols
 COMB(hjDash,      KC_MINS,               KC_H, KC_J)
