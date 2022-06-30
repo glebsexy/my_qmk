@@ -10,8 +10,8 @@ COMB(hySftEnter,  LSFT(KC_ENT),          KC_H, KC_Y) // shift enter
 COMB(kjSpace,     KC_SPC,                KC_K, KC_J) // space
 COMB(rfRight,     KC_RIGHT,              KC_R, KC_F) // arrow right
 COMB(edLeft,      KC_LEFT,               KC_E, KC_D) // arrow left
-COMB(ujAltRight,  RALT(KC_RIGHT),        KC_U, KC_J) // alt right (move, select, tabs, etc.)
-COMB(kiAltLeft,   RALT(KC_LEFT),         KC_K, KC_I) // alt left
+COMB(kiAltRight,  RALT(KC_RIGHT),        KC_K, KC_I) // alt right (move, select, tabs, etc.)
+COMB(ujAltLeft,   RALT(KC_LEFT),         KC_U, KC_J) // alt left
 COMB(werPlay,     KC_MPLY,               KC_W, KC_E, KC_R) // media play
 
 // symbols
