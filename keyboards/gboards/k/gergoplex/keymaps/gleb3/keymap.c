@@ -17,7 +17,7 @@
 //Tap Dance Declarations
 enum {
  TD_CMD_OPT,
- TD_LAY1_LAY2,
+ TD_NAV_SYMB,
  TD_CMD_SYMB
 };
 
@@ -31,7 +31,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     MT(MOD_RSFT, KC_Z), MT(MOD_LCTL, KC_X), KC_C, KC_V, KC_B,        KC_N, KC_M, KC_COMM, KC_DOT, MT(MOD_RSFT, KC_SLSH),
 
     KC_LALT, KC_LGUI, LT(SYMB, KC_SPC),  // left
-    MO(NAVIG), KC_RGUI, KC_RCTL          // right
+    TD(TD_NAV_SYMB), KC_RGUI, KC_RCTL   // right
 ),
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +69,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+// on each layer tap
+void dance_lay_each(qk_tap_dance_state_t *state, void *user_data) {
+    switch (state->count) {
+        case 1:
+            layer_move(NAVIG);
+            break;
+        case 2:
+            layer_move(SYMB);
+            break;
+    }
+};
+
 void dance_lay_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         layer_move(NAVIG);
@@ -102,6 +114,6 @@ void td_cmd_symb_reset(qk_tap_dance_state_t *state, void *user_data) {
 //Tap Dance Definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_CMD_OPT]  = ACTION_TAP_DANCE_DOUBLE(KC_LGUI, KC_LALT),
-    [TD_LAY1_LAY2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lay_finished, dance_lay_reset),
+    [TD_NAV_SYMB] = ACTION_TAP_DANCE_FN_ADVANCED(dance_lay_each, dance_lay_finished, dance_lay_reset),
     [TD_CMD_SYMB] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_cmd_symb_finished, td_cmd_symb_reset)
 };
