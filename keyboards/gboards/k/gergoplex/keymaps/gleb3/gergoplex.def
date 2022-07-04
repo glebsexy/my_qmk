@@ -35,6 +35,7 @@ COMB(ioRbrc,      KC_RBRC,               KC_I, KC_O) // ъ
 COMB(bvUndo,      RGUI(KC_Z),            KC_B, KC_V) // undo
 COMB(ertF19,      KC_F19,                KC_R, KC_T, KC_E) // fullscreen
 COMB(yiF2,        KC_F2,                 KC_Y, KC_I) // screenshot
+COMB(kjlCmdSpc,   RGUI(KC_SPC),          KC_J, KC_K, KC_L) // language switch
 
 //COMB(hjLess,      KC_LT,            KC_H, KC_J)
 //COMB(klGreat,     KC_GT,            KC_K, KC_L)

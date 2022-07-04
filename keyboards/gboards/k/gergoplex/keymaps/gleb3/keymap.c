@@ -16,10 +16,38 @@
 
 //Tap Dance Declarations
 enum {
- TD_CMD_OPT,
- TD_NAV_SYMB,
- TD_CMD_SYMB
+ TD_NAV_SYMB = 1,
+ EAGER_CMD_A
 };
+
+typedef struct {
+    bool is_press_action;
+    uint8_t state;
+} tap;
+
+// Define a type for as many tap dance states as you need
+enum {
+    SINGLE_TAP = 1,
+    SINGLE_HOLD,
+    MULTI_TAP
+};
+
+// Function associated with all tap dances
+uint8_t cur_dance(qk_tap_dance_state_t *state);
+
+// Functions associated with individual tap dances
+void ql_finished(qk_tap_dance_state_t *state, void *user_data);
+void ql_reset(qk_tap_dance_state_t *state, void *user_data);
+
+// #define EAGER_MT(mod, kc) (QK_MOD_TAP | (((mod)&0x1F) << 8) | ((kc)&0xFF))
+
+// create an eager tap dance definition with custom user params 
+#define ACTION_TAP_DANCE_FN_EAGER_MOD(kc1, kc2) {  \
+    .fn = { eager_mod_each, eager_mod_finished, eager_mod_reset }, \
+    .user_data = (void *)&((qk_tap_dance_pair_t) { kc1, kc2 }) \
+}
+
+// TD(id) => tap[id](...)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -69,6 +97,89 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+//////////////////////////////////////////////////////////
+
+// Tap dance
+
+// Determine the current tap dance state
+uint8_t cur_dance(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (!state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else return MULTI_TAP;
+}
+
+// Initialize tap structure associated with tap dance key
+static tap ql_tap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+void dance_lay_reset(qk_tap_dance_state_t *state, void *user_data) {
+    layer_move(BASE);
+};
+
+
+// on each key tap
+void eager_mod_each(qk_tap_dance_state_t *state, void *user_data) {
+    qk_tap_dance_pair_t *pair = (qk_tap_dance_pair_t *)user_data;
+    uint16_t keymod = pair->kc1;
+    uint16_t keycode = pair->kc2;
+
+    // current tap dance state
+    ql_tap_state.state = cur_dance(state);
+    switch (ql_tap_state.state) {
+        case SINGLE_HOLD:
+            register_code(keymod);
+            break;
+        case SINGLE_TAP:
+            unregister_code(keymod);
+            register_code(keycode);
+            break;
+        case MULTI_TAP:
+            unregister_code(keymod);
+            register_code(keycode);
+            break;
+    }
+};
+
+void eager_mod_finished(qk_tap_dance_state_t *state, void *user_data) {
+    qk_tap_dance_pair_t *pair = (qk_tap_dance_pair_t *)user_data;
+    uint16_t keymod = pair->kc1;
+    uint16_t keycode = pair->kc2;
+
+    ql_tap_state.state = cur_dance(state);
+    switch (ql_tap_state.state) {
+        case SINGLE_TAP:
+            unregister_code(keymod);
+            register_code(keycode);
+            break;
+        case MULTI_TAP:
+            register_code(keycode);
+            break;
+    }
+};
+
+void eager_mod_reset(qk_tap_dance_state_t *state, void *user_data) {
+    qk_tap_dance_pair_t *pair = (qk_tap_dance_pair_t *)user_data;
+    uint16_t keymod = pair->kc1;
+    uint16_t keycode = pair->kc2;
+
+    unregister_code(keymod);
+    unregister_code(keycode);
+
+    ql_tap_state.state = 0;
+    // switch (state->count) {
+    //     case 1:
+    //         unregister_code(keymod);
+    //         break;
+    //     case 2:
+    //         unregister_code(keycode);
+    //         break;
+    // }
+};
+
+
 // on each layer tap
 void dance_lay_each(qk_tap_dance_state_t *state, void *user_data) {
     switch (state->count) {
@@ -89,31 +200,10 @@ void dance_lay_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 };
 
-void dance_lay_reset(qk_tap_dance_state_t *state, void *user_data) {
-    layer_move(BASE);
-};
-
-void td_cmd_symb_finished(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        register_mods(MOD_BIT(KC_RGUI));
-    } else {
-        layer_move(SYMB);
-    }
-};
-
-void td_cmd_symb_reset(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        register_mods(MOD_BIT(KC_RGUI));
-    } else {
-        layer_move(BASE);
-    }
-};
-
 ////////////////////////////////////////////////
 
 //Tap Dance Definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_CMD_OPT]  = ACTION_TAP_DANCE_DOUBLE(KC_LGUI, KC_LALT),
     [TD_NAV_SYMB] = ACTION_TAP_DANCE_FN_ADVANCED(dance_lay_each, dance_lay_finished, dance_lay_reset),
-    [TD_CMD_SYMB] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_cmd_symb_finished, td_cmd_symb_reset)
+    [EAGER_CMD_A] = ACTION_TAP_DANCE_FN_EAGER_MOD(KC_LGUI, KC_A)
 };
